@@ -2,7 +2,7 @@ name: Post Yuan Rate to VK
 
 on:
   schedule:
-    - cron: '15 17 * * *'  # Запуск каждый день в 12:00 МСК (9:00 UTC)
+    - cron: '20 17 * * *'  # Запуск каждый день в 12:00 МСК (9:00 UTC)
   workflow_dispatch:
 
 jobs:
