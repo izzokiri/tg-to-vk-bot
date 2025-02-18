@@ -1,3 +1,4 @@
-vk_api
 requests
+vk_api
 python-dotenv
+aiogram
