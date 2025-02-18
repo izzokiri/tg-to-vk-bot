@@ -51,13 +51,18 @@ def upload_photo_to_vk(photo_url):
 # Функция для публикации поста в ВКонтакте с прикрепленными фото (используется токен группы)
 def post_to_vk(text, photo_urls=None):
     try:
-        vk_session = vk_api.VkApi(token=VK_GROUP_TOKEN)
+        # Заменяем "@freelogistics" на "@freelogistics1"
+        if "@freelogistics" in text:
+            text = text.replace("@freelogistics", "@freelogistics1")
+            print("✅ Заменено '@freelogistics' на '@freelogistics1'")
+
+        vk_session = vk_api.VkApi(token=VK_ACCESS_TOKEN)
         vk = vk_session.get_api()
 
         attachments = []
         if photo_urls:
             for photo_url in photo_urls:
-                # Загружаем фото на сервер ВКонтакте и получаем идентификатор
+                # Загружаем фото на сервер ВКонтакте
                 photo_attachment = upload_photo_to_vk(photo_url)
                 if photo_attachment:
                     attachments.append(photo_attachment)
