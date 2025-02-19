@@ -2,7 +2,7 @@ name: Run Telegram to VK Bot
 
 on:
   schedule:
-    - cron: '0 18 * * *'  # Запускать каждый день в 08:00 UTC (11:00 МСК)
+    - cron: '0 18 * * *'  # Запускать каждый день в 18:00 UTC (21:00 МСК)
   workflow_dispatch:  # Позволяет запускать workflow вручную
 
 jobs:
@@ -35,6 +35,11 @@ jobs:
           echo "VK_GROUP_ID=${{ secrets.VK_GROUP_ID }}" >> .env
           echo "VK_USER_TOKEN=${{ secrets.VK_USER_TOKEN }}" >> .env
 
-      # Шаг 5: Запускаем скрипт
+      # Шаг 5: Проверяем содержимое .env
+      - name: Check .env file
+        run: |
+          cat .env
+
+      # Шаг 6: Запускаем скрипт
       - name: Run bot
         run: python bot.py
