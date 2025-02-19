@@ -56,7 +56,7 @@ def post_to_vk(text, photo_urls=None):
             text = text.replace("@freelogistics", "@freelogistics1")
             print("✅ Заменено '@freelogistics' на '@freelogistics1'")
 
-        vk_session = vk_api.VkApi(token=VK_ACCESS_TOKEN)
+       vk_session = vk_api.VkApi(token=VK_GROUP_TOKEN)
         vk = vk_session.get_api()
 
         attachments = []
