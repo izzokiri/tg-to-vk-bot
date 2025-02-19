@@ -107,12 +107,13 @@ async def get_today_posts():
                     text = text.replace("@freelogistics", "@freelogistics1")
                     print("✅ Заменено '@freelogistics' на '@freelogistics1'")
 
-                # Собираем все фотографии из поста
+                # Собираем все фотографии из поста (используем только самую большую версию)
                 if message.photo:
-                    for photo in message.photo:
-                        file_info = await bot.get_file(photo.file_id)
-                        photo_url = f"https://api.telegram.org/file/bot{TELEGRAM_BOT_TOKEN}/{file_info.file_path}"
-                        photos.append(photo_url)
+                    # Используем последний элемент в списке (самая большая версия)
+                    largest_photo = message.photo[-1]
+                    file_info = await bot.get_file(largest_photo.file_id)
+                    photo_url = f"https://api.telegram.org/file/bot{TELEGRAM_BOT_TOKEN}/{file_info.file_path}"
+                    photos.append(photo_url)
 
                 posts.append({"text": text, "photos": photos})
 
