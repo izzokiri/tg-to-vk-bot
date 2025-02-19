@@ -94,12 +94,14 @@ async def get_today_posts():
                 text = message.text or message.caption or ""
                 photos = []
 
-                # Извлекаем ссылки из текста
+                # Извлекаем гиперссылки из текста
                 if message.entities:
                     for entity in message.entities:
                         if entity.type == "text_link":  # Гиперссылка
                             url = entity.url
-                            text = text.replace(entity.get_text(message.text), url)  # Заменяем текст на ссылку
+                            link_text = entity.get_text(message.text)  # Текст гиперссылки
+                            # Заменяем текст на формат ВКонтакте [ссылка|текст]
+                            text = text.replace(link_text, f"[{url}|{link_text}]")
 
                 # Заменяем "@freelogistics" на "@freelogistics1"
                 if "@freelogistics" in text:
