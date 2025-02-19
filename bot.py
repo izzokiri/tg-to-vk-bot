@@ -81,7 +81,7 @@ def post_to_vk(text, photo_urls=None):
 
 # Функция для получения всех постов за текущий день из Telegram-канала
 async def get_today_posts():
-    today = datetime.datetime.now().date()  # ✅ Правильный вызов datetime
+    today = datetime.datetime.now().date()
     updates = await bot.get_updates()
     posts = []
 
@@ -93,6 +93,18 @@ async def get_today_posts():
             if message_date == today:
                 text = message.text or message.caption or ""
                 photos = []
+
+                # Извлекаем ссылки из текста
+                if message.entities:
+                    for entity in message.entities:
+                        if entity.type == "text_link":  # Гиперссылка
+                            url = entity.url
+                            text = text.replace(entity.get_text(message.text), url)  # Заменяем текст на ссылку
+
+                # Заменяем "@freelogistics" на "@freelogistics1"
+                if "@freelogistics" in text:
+                    text = text.replace("@freelogistics", "@freelogistics1")
+                    print("✅ Заменено '@freelogistics' на '@freelogistics1'")
 
                 if message.photo:
                     largest_photo = message.photo[-1]
