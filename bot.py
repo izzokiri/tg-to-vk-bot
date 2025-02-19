@@ -77,8 +77,7 @@ def post_to_vk(text, photo_urls=None):
         print("✅ Пост успешно опубликован в группу!")
     except Exception as e:
         print(f"❌ Ошибка при публикации поста в ВКонтакте: {e}")
-
-
+        
 # Функция для получения всех постов за текущий день из Telegram-канала
 async def get_today_posts():
     today = datetime.datetime.now().date()
@@ -108,11 +107,12 @@ async def get_today_posts():
                     text = text.replace("@freelogistics", "@freelogistics1")
                     print("✅ Заменено '@freelogistics' на '@freelogistics1'")
 
+                # Собираем все фотографии из поста
                 if message.photo:
-                    largest_photo = message.photo[-1]
-                    file_info = await bot.get_file(largest_photo.file_id)
-                    photo_url = f"https://api.telegram.org/file/bot{TELEGRAM_BOT_TOKEN}/{file_info.file_path}"
-                    photos.append(photo_url)
+                    for photo in message.photo:
+                        file_info = await bot.get_file(photo.file_id)
+                        photo_url = f"https://api.telegram.org/file/bot{TELEGRAM_BOT_TOKEN}/{file_info.file_path}"
+                        photos.append(photo_url)
 
                 posts.append({"text": text, "photos": photos})
 
