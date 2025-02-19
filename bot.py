@@ -82,14 +82,17 @@ def post_to_vk(text, photo_urls=None):
 async def get_today_posts():
     today = datetime.datetime.now().date()
     updates = await bot.get_updates()
-    posts = []
+    posts = {}
+    processed_message_ids = set()  # Для отслеживания уже обработанных постов
 
     for update in updates:
         if update.channel_post and update.channel_post.chat.id == int(TELEGRAM_CHANNEL_ID):
             message: Message = update.channel_post
             message_date = message.date.date()
 
-            if message_date == today:
+            # Проверяем, что пост еще не был обработан
+            if message_date == today and message.message_id not in processed_message_ids:
+                processed_message_ids.add(message.message_id)  # Добавляем ID поста в обработанные
                 text = message.text or message.caption or ""
                 photos = []
 
@@ -115,9 +118,14 @@ async def get_today_posts():
                     photo_url = f"https://api.telegram.org/file/bot{TELEGRAM_BOT_TOKEN}/{file_info.file_path}"
                     photos.append(photo_url)
 
-                posts.append({"text": text, "photos": photos})
+                # Группируем посты по их ID
+                if message.message_id in posts:
+                    posts[message.message_id]["photos"].extend(photos)
+                else:
+                    posts[message.message_id] = {"text": text, "photos": photos}
 
-    return posts
+    # Возвращаем список постов
+    return list(posts.values())
 
 
 # Основная функция
